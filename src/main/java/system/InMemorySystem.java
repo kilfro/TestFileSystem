@@ -77,7 +77,7 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public String pwd() {
-        if (currentModel == root) {
+        if (currentModel.equals(root)) {
             return "/";
         } else {
             return pwd.toString();
