@@ -13,33 +13,69 @@ import java.util.*;
  * Created by kirill on 22.04.17.
  */
 public class InMemorySystem implements SystemInterface {
-    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " "));
+    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " ", "//"));
     private final AbstractModel root = new Directory(null);
     private AbstractModel currentModel = root;
     private StringBuilder pwd = new StringBuilder();
 
-    @Override
-    public boolean mkdir(String value) throws AlreadyExistsException {
+    private void makeModel(String value, boolean isDirectory) throws AlreadyExistsException {
         if (currentModel.getNext().containsKey(value)) {
             throw new AlreadyExistsException("Папка с таким именем уже существует!\n");
         } else if (INCORRECT_NAMES.contains(value)) {
             throw new IllegalArgumentException("Некорректное имя папки!\n");
         } else {
-            currentModel.getNext().put(value, new Directory(currentModel));
-            return true;
+            currentModel.getNext().put(value, isDirectory ? new Directory(currentModel) : new File(currentModel));
         }
     }
 
     @Override
-    public boolean mkfile(String value) throws AlreadyExistsException {
-        if (currentModel.getNext().containsKey(value)) {
-            throw new AlreadyExistsException("Файл с таким именем уже существует!\n");
-        } else if (INCORRECT_NAMES.contains(value)) {
-            throw new IllegalArgumentException("Некорректное имя файла!\n");
-        } else {
-            currentModel.getNext().put(value, new File(currentModel));
-            return true;
+    public boolean mkdir(String value) throws AlreadyExistsException {
+        AbstractModel model = currentModel;
+        String[] values = value.split("/");
+        int start = 0;
+        if ("".equals(values[0])) {
+            start = 1;
+            currentModel = root;
         }
+        for (; start < values.length; start++) {
+            String name = values[start];
+            try {
+                makeModel(name, true);
+            } catch (AlreadyExistsException e) {
+                if (start == values.length - 1) {
+                    throw e;
+                }
+            }
+            currentModel = currentModel.getNext().get(name);
+        }
+        currentModel = model;
+        return true;
+    }
+
+    @Override
+    public boolean mkfile(String value) throws AlreadyExistsException {
+        AbstractModel model = currentModel;
+        String[] values = value.split("/");
+        int start = 0;
+        if ("".equals(values[0])) {
+            start = 1;
+            currentModel = root;
+        }
+        for (; start < values.length; start++) {
+            String name = values[start];
+            if (start == values.length - 1) {
+                makeModel(name, false);
+            } else {
+                try {
+                    makeModel(name, true);
+                } catch (AlreadyExistsException e) {
+
+                }
+                currentModel = currentModel.getNext().get(name);
+            }
+        }
+        currentModel = model;
+        return true;
     }
 
     @Override
