@@ -7,16 +7,13 @@ import model.Directory;
 import model.File;
 import model.TransferModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by kirill on 22.04.17.
  */
 public class InMemorySystem implements SystemInterface {
-    private static final List<String> INCORRECT_NAMES = Arrays.asList("", ".", "..", "/", " ");
+    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " "));
     private final AbstractModel root = new Directory(null);
     private AbstractModel currentModel = root;
     private StringBuilder pwd = new StringBuilder();
