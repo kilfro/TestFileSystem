@@ -45,13 +45,13 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public void cd(String value) throws NotFoundException {
-        if (value.equals("/")) {
+        if ("/".equals(value)) {
             pwd.delete(0, pwd.length());
             currentModel = root;
-        } else if (value.equals("")) {
+        } else if ("".equals(value)) {
             throw new NotFoundException("Путь не найден!\n");
         } else {
-            if (value.equals("..")) {
+            if ("..".equals(value)) {
                 if (currentModel == root) {
                     throw new NotFoundException("Путь не найден!\n");
                 } else {

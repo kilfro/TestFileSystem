@@ -25,17 +25,17 @@ public class CommandController {
                 } catch (IndexOutOfBoundsException e) {
                     value = "";
                 }
-                if (operation.equals("exit")) {
+                if ("exit".equals(operation)) {
                     console.askExit();
-                } else if (operation.equals("help")) {
+                } else if ("help".equals(operation)) {
                     console.printHelp(value);
-                } else if (operation.equals("cd")) {
+                } else if ("cd".equals(operation)) {
                     system.cd(value);
-                } else if (operation.equals("mkdir")) {
+                } else if ("mkdir".equals(operation)) {
                     system.mkdir(value);
-                } else if (operation.equals("mkfile")) {
+                } else if ("mkfile".equals(operation)) {
                     system.mkfile(value);
-                } else if (operation.equals("ls")) {
+                } else if ("ls".equals(operation)) {
                     console.printContent(system.ls());
                 } else {
                     console.printMessage("Неверная команда!\n");
