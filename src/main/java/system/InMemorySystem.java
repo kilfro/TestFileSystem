@@ -13,16 +13,16 @@ import java.util.*;
  * Created by kirill on 22.04.17.
  */
 public class InMemorySystem implements SystemInterface {
-    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " ", "//"));
+    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " ", "//", ","));
     private final AbstractModel root = new Directory(null);
     private AbstractModel currentModel = root;
     private StringBuilder pwd = new StringBuilder();
 
     private void makeModel(String value, boolean isDirectory) throws AlreadyExistsException {
         if (currentModel.getNext().containsKey(value)) {
-            throw new AlreadyExistsException("Папка с таким именем уже существует!\n");
+            throw new AlreadyExistsException("Файл с таким именем уже существует!\n");
         } else if (INCORRECT_NAMES.contains(value)) {
-            throw new IllegalArgumentException("Некорректное имя папки!\n");
+            throw new IllegalArgumentException("Некорректное имя файла!\n");
         } else {
             currentModel.getNext().put(value, isDirectory ? new Directory(currentModel) : new File(currentModel));
         }
@@ -30,6 +30,9 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public boolean mkdir(String value) throws AlreadyExistsException {
+        if (value.contains("//") || "/".equals(value)) {
+            throw new IllegalArgumentException("Некорректное имя файла!\n");
+        }
         AbstractModel model = currentModel;
         String[] values = value.split("/");
         int start = 0;
@@ -54,6 +57,9 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public boolean mkfile(String value) throws AlreadyExistsException {
+        if (value.contains("//") || "/".equals(value)) {
+            throw new IllegalArgumentException("Некорректное имя файла!\n");
+        }
         AbstractModel model = currentModel;
         String[] values = value.split("/");
         int start = 0;
