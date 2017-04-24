@@ -16,9 +16,9 @@ import java.util.Map;
  * Created by kirill on 22.04.17.
  */
 public class InMemorySystem implements SystemInterface {
+    private static final List<String> INCORRECT_NAMES = Arrays.asList("", ".", "..", "/", " ");
     private final AbstractModel root = new Directory(null);
     private AbstractModel currentModel = root;
-    private static final List<String> INCORRECT_NAMES = Arrays.asList("", ".", "..", "/", " ");
     private StringBuilder pwd = new StringBuilder();
 
     @Override
@@ -26,8 +26,8 @@ public class InMemorySystem implements SystemInterface {
         if (currentModel.getNext().containsKey(value)) {
             throw new AlreadyExistsException("Папка с таким именем уже существует!\n");
         } else if (INCORRECT_NAMES.contains(value)) {
-            throw new IllegalArgumentException("Некорректное имя папки\n");
-        }else {
+            throw new IllegalArgumentException("Некорректное имя папки!\n");
+        } else {
             currentModel.getNext().put(value, new Directory(currentModel));
         }
     }
@@ -48,28 +48,32 @@ public class InMemorySystem implements SystemInterface {
         if (value.equals("/")) {
             pwd.delete(0, pwd.length());
             currentModel = root;
-        } else if (value.equals("..")) {
-            if (currentModel == root) {
-                throw new NotFoundException("Путь не найден!\n");
-            } else {
-                pwd.delete(pwd.lastIndexOf("/"), pwd.length());
-                currentModel = currentModel.getPrevious();
-            }
+        } else if (value.equals("")) {
+            throw new NotFoundException("Путь не найден!\n");
         } else {
-            AbstractModel model = currentModel;
-            for (String name : value.split("/")) {
-                if (name.equals("")) {
-                    pwd.delete(0, pwd.length());
-                    model = root;
-                }else {
-                    pwd.append("/").append(name);
-                    model = model.getNext().get(name);
+            if (value.equals("..")) {
+                if (currentModel == root) {
+                    throw new NotFoundException("Путь не найден!\n");
+                } else {
+                    pwd.delete(pwd.lastIndexOf("/"), pwd.length());
+                    currentModel = currentModel.getPrevious();
                 }
-            }
-            if (model == null || model.isFile()) {
-                throw new NotFoundException("Путь не найден!\n");
             } else {
-                currentModel = model;
+                AbstractModel model = currentModel;
+                for (String name : value.split("/")) {
+                    if (name.equals("")) {
+                        pwd.delete(0, pwd.length());
+                        model = root;
+                    } else {
+                        pwd.append("/").append(name);
+                        model = model.getNext().get(name);
+                    }
+                }
+                if (model == null || model.isFile()) {
+                    throw new NotFoundException("Путь не найден!\n");
+                } else {
+                    currentModel = model;
+                }
             }
         }
     }

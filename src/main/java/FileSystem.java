@@ -5,7 +5,7 @@ import controller.CommandController;
  */
 public class FileSystem {
     public static void main(String[] args) {
-        CommandController controller = CommandController.getInstance();
+        CommandController controller = new CommandController();
         controller.runSystem();
     }
 }

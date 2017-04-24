@@ -10,17 +10,8 @@ import util.ConsoleHelper;
  * Created by kirill on 21.04.17.
  */
 public class CommandController {
-    private static CommandController instance;
     private SystemInterface system = new InMemorySystem();
     private ConsoleHelper console = new ConsoleHelper();
-
-    private CommandController() {
-
-    }
-
-    public static CommandController getInstance() {
-        return instance == null ? new CommandController() : instance;
-    }
 
     public void runSystem() {
         while (true) {
@@ -32,29 +23,22 @@ public class CommandController {
                 try {
                     value = args[1];
                 } catch (IndexOutOfBoundsException e) {
-                    value = null;
+                    value = "";
                 }
-                switch (operation) {
-                    case "exit":
-                        console.askExit();
-                        break;
-                    case "help":
-                        console.printHelp(value);
-                        break;
-                    case "cd":
-                        system.cd(value);
-                        break;
-                    case "mkdir":
-                        system.mkdir(value);
-                        break;
-                    case "mkfile":
-                        system.mkfile(value);
-                        break;
-                    case "ls":
-                        console.printContent(system.ls());
-                        break;
-                    default:
-                        console.printMessage("Неверная команда!\n");
+                if (operation.equals("exit")) {
+                    console.askExit();
+                } else if (operation.equals("help")) {
+                    console.printHelp(value);
+                } else if (operation.equals("cd")) {
+                    system.cd(value);
+                } else if (operation.equals("mkdir")) {
+                    system.mkdir(value);
+                } else if (operation.equals("mkfile")) {
+                    system.mkfile(value);
+                } else if (operation.equals("ls")) {
+                    console.printContent(system.ls());
+                } else {
+                    console.printMessage("Неверная команда!\n");
                 }
             } catch (InterruptOperationException e) {
                 console.printMessage(e.getMessage());
