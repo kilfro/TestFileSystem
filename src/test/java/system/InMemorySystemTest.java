@@ -93,8 +93,8 @@ public class InMemorySystemTest {
     @Test
     public void ls() throws Exception {
         List<TransferModel> actual = system.ls();
-        assertTrue(actual.get(0).equals(new TransferModel("dir1", true)));
-        assertTrue(actual.get(1).equals(new TransferModel("dir2", true)));
-        assertTrue(actual.get(2).equals(new TransferModel("file1", false)));
+        assertEquals(actual.get(0), new TransferModel("dir1", true));
+        assertEquals(actual.get(1), new TransferModel("dir2", true));
+        assertEquals(actual.get(2), new TransferModel("file1", false));
     }
 }
