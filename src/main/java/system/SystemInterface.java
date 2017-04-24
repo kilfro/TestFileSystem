@@ -11,11 +11,11 @@ import java.util.List;
  * Created by kirill on 22.04.17.
  */
 public interface SystemInterface {
-    void mkdir(String value) throws AlreadyExistsException;
+    boolean mkdir(String value) throws AlreadyExistsException;
 
-    void mkfile(String value) throws AlreadyExistsException;
+    boolean mkfile(String value) throws AlreadyExistsException;
 
-    void cd(String value) throws NotFoundException;
+    boolean cd(String value) throws NotFoundException;
 
     String pwd();
 

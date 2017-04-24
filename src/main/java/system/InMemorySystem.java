@@ -19,29 +19,31 @@ public class InMemorySystem implements SystemInterface {
     private StringBuilder pwd = new StringBuilder();
 
     @Override
-    public void mkdir(String value) throws AlreadyExistsException {
+    public boolean mkdir(String value) throws AlreadyExistsException {
         if (currentModel.getNext().containsKey(value)) {
             throw new AlreadyExistsException("Папка с таким именем уже существует!\n");
         } else if (INCORRECT_NAMES.contains(value)) {
             throw new IllegalArgumentException("Некорректное имя папки!\n");
         } else {
             currentModel.getNext().put(value, new Directory(currentModel));
+            return true;
         }
     }
 
     @Override
-    public void mkfile(String value) throws AlreadyExistsException {
+    public boolean mkfile(String value) throws AlreadyExistsException {
         if (currentModel.getNext().containsKey(value)) {
             throw new AlreadyExistsException("Файл с таким именем уже существует!\n");
         } else if (INCORRECT_NAMES.contains(value)) {
             throw new IllegalArgumentException("Некорректное имя файла!\n");
         } else {
             currentModel.getNext().put(value, new File(currentModel));
+            return true;
         }
     }
 
     @Override
-    public void cd(String value) throws NotFoundException {
+    public boolean cd(String value) throws NotFoundException {
         if ("/".equals(value)) {
             pwd.delete(0, pwd.length());
             currentModel = root;
@@ -73,6 +75,7 @@ public class InMemorySystem implements SystemInterface {
                 }
             }
         }
+        return true;
     }
 
     @Override

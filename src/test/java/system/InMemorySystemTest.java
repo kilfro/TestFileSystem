@@ -29,7 +29,7 @@ public class InMemorySystemTest {
 
     @Test
     public void mkdir() throws Exception {
-        system.mkdir("dir3");
+        assertTrue(system.mkdir("dir3"));
     }
 
     @Test(expected = AlreadyExistsException.class)
@@ -44,7 +44,7 @@ public class InMemorySystemTest {
 
     @Test
     public void mkfile() throws Exception {
-        system.mkdir("file2");
+        assertTrue(system.mkdir("file2"));
     }
 
     @Test(expected = AlreadyExistsException.class)
@@ -59,12 +59,12 @@ public class InMemorySystemTest {
 
     @Test
     public void cd() throws Exception {
-        system.cd("dir1");
+        assertTrue(system.cd("dir1"));
     }
 
     @Test
     public void cdNextDir() throws Exception {
-        system.cd("/dir1/dir10");
+        assertTrue(system.cd("/dir1/dir10"));
     }
 
     @Test(expected = NotFoundException.class)
