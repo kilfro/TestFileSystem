@@ -52,7 +52,7 @@ public class InMemorySystem implements SystemInterface {
             throw new NotFoundException("Путь не найден!\n");
         } else {
             if ("..".equals(value)) {
-                if (currentModel == root) {
+                if (currentModel.equals(root)) {
                     throw new NotFoundException("Путь не найден!\n");
                 } else {
                     pwd.delete(pwd.lastIndexOf("/"), pwd.length());
@@ -61,7 +61,7 @@ public class InMemorySystem implements SystemInterface {
             } else {
                 AbstractModel model = currentModel;
                 for (String name : value.split("/")) {
-                    if (name.equals("")) {
+                    if ("".equals(name)) {
                         pwd.delete(0, pwd.length());
                         model = root;
                     } else {
