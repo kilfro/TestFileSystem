@@ -67,9 +67,12 @@ public class ConsoleHelper {
     }
 
     public void printContent(List<TransferModel> ls) {
-        String format = "%s\t%-20.20s\t%s\n";
+        printMessage(String.format("%-3s|%-20s|%-6s\n", "Тип", "Имя", "Размер"));
         for (TransferModel model : ls) {
-            printMessage(String.format(format, model.isDirectory() ? "d" : "f", model.getName(), model.getSize() == 0 ? "" : model.getSize()));
+            printMessage(String.format("%s\t%-21.21s\t%s\n",
+                    model.isDirectory() ? "d" : "f",
+                    model.getName(),
+                    model.getSize() == 0 ? "" : model.getSize()));
         }
     }
 }

@@ -17,14 +17,9 @@ public class CommandController {
         while (true) {
             try {
                 console.printMessage(system.pwd() + ": ");
-                String[] args = console.readString().split(" ");
+                String[] args = parseCommand(console.readString());
                 String operation = args[0];
-                String value;
-                try {
-                    value = args[1];
-                } catch (IndexOutOfBoundsException e) {
-                    value = "";
-                }
+                String value = args[1];
                 if ("exit".equals(operation)) {
                     console.askExit();
                 } else if ("help".equals(operation)) {
@@ -47,5 +42,20 @@ public class CommandController {
                 console.printMessage(e.getMessage());
             }
         }
+    }
+
+    private String[] parseCommand(String command) {
+        String operation, arg;
+        if (command.contains(" ")) {
+            operation = command.substring(0, command.lastIndexOf(" "));
+            arg = command.substring(command.indexOf(" ") + 1);
+            if (!arg.startsWith("/")) {
+                arg = system.pwd() + arg;
+            }
+        } else {
+            operation = command;
+            arg = "";
+        }
+        return new String[]{operation, arg};
     }
 }
