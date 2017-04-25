@@ -20,9 +20,9 @@ public class InMemorySystem implements SystemInterface {
 
     private void makeModel(String value, boolean isDirectory) throws AlreadyExistsException {
         if (currentModel.getNext().containsKey(value)) {
-            throw new AlreadyExistsException("Файл с таким именем уже существует!\n");
-        } else if (INCORRECT_NAMES.contains(value)) {
-            throw new IllegalArgumentException("Некорректное имя файла!\n");
+            throw new AlreadyExistsException("Файл или папка с таким именем уже существует!\n");
+        } else if (INCORRECT_NAMES.contains(value) || value == null) {
+            throw new IllegalArgumentException("Некорректное имя файла или папки!\n");
         } else {
             currentModel.getNext().put(value, isDirectory ? new Directory(currentModel) : new File(currentModel));
         }
@@ -30,22 +30,18 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public boolean mkdir(String value) throws AlreadyExistsException {
-        if (value.contains("//") || "/".equals(value)) {
+        if (value == null || INCORRECT_NAMES.contains(value)) {
             throw new IllegalArgumentException("Некорректное имя файла!\n");
         }
         AbstractModel model = currentModel;
+        currentModel = root;
         String[] values = value.split("/");
-        int start = 0;
-        if ("".equals(values[0])) {
-            start = 1;
-            currentModel = root;
-        }
-        for (; start < values.length; start++) {
-            String name = values[start];
+        for (int i = 0; i < values.length; i++) {
+            String name = values[i];
             try {
                 makeModel(name, true);
             } catch (AlreadyExistsException e) {
-                if (start == values.length - 1) {
+                if (i == values.length - 1) {
                     throw e;
                 }
             }
@@ -57,19 +53,15 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public boolean mkfile(String value) throws AlreadyExistsException {
-        if (value.contains("//") || "/".equals(value)) {
+        if (value == null || INCORRECT_NAMES.contains(value)) {
             throw new IllegalArgumentException("Некорректное имя файла!\n");
         }
         AbstractModel model = currentModel;
+        currentModel = root;
         String[] values = value.split("/");
-        int start = 0;
-        if ("".equals(values[0])) {
-            start = 1;
-            currentModel = root;
-        }
-        for (; start < values.length; start++) {
-            String name = values[start];
-            if (start == values.length - 1) {
+        for (int i = 0; i < values.length; i++) {
+            String name = values[i];
+            if (i == values.length - 1) {
                 makeModel(name, false);
             } else {
                 try {
@@ -86,35 +78,24 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public boolean cd(String value) throws NotFoundException {
-        if ("/".equals(value)) {
-            pwd.delete(0, pwd.length());
-            currentModel = root;
-        } else if ("".equals(value)) {
+        if (value == null) {
             throw new NotFoundException("Путь не найден!\n");
+        } else if ("/".equals(value)) {
+            currentModel = root;
+            pwd.delete(0, pwd.length());
         } else {
-            if ("..".equals(value)) {
-                if (currentModel.equals(root)) {
+            AbstractModel bufModel = currentModel;
+            StringBuilder bufPwd = pwd;
+            currentModel = root;
+            pwd.delete(0, pwd.length());
+            for (String name : value.split("/")) {
+                currentModel = currentModel.getNext().get(name);
+                if (currentModel == null || currentModel.isFile()) {
+                    currentModel = bufModel;
+                    pwd = bufPwd;
                     throw new NotFoundException("Путь не найден!\n");
-                } else {
-                    pwd.delete(pwd.lastIndexOf("/"), pwd.length());
-                    currentModel = currentModel.getPrevious();
                 }
-            } else {
-                AbstractModel model = currentModel;
-                for (String name : value.split("/")) {
-                    if ("".equals(name)) {
-                        pwd.delete(0, pwd.length());
-                        model = root;
-                    } else {
-                        pwd.append("/").append(name);
-                        model = model.getNext().get(name);
-                    }
-                }
-                if (model == null || model.isFile()) {
-                    throw new NotFoundException("Путь не найден!\n");
-                } else {
-                    currentModel = model;
-                }
+                pwd.append("/").append(name);
             }
         }
         return true;
@@ -124,9 +105,8 @@ public class InMemorySystem implements SystemInterface {
     public String pwd() {
         if (currentModel.equals(root)) {
             return "/";
-        } else {
-            return pwd.toString();
         }
+        return pwd.toString();
     }
 
     @Override
@@ -140,5 +120,9 @@ public class InMemorySystem implements SystemInterface {
 
     public AbstractModel getRoot() {
         return root;
+    }
+
+    public String getPwd() {
+        return pwd.toString();
     }
 }

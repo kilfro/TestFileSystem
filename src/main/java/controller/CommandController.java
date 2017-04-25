@@ -1,6 +1,7 @@
 package controller;
 
 import exception.InterruptOperationException;
+import model.Pair;
 import system.InMemorySystem;
 import system.SystemInterface;
 
@@ -17,9 +18,9 @@ public class CommandController {
         while (true) {
             try {
                 console.printMessage(system.pwd() + ": ");
-                String[] args = parseCommand(console.readString());
-                String operation = args[0];
-                String value = args[1];
+                Pair pair = parseCommand(console.readString());
+                String operation = pair.getOperation();
+                String value = pair.getNames();
                 if ("exit".equals(operation)) {
                     console.askExit();
                 } else if ("help".equals(operation)) {
@@ -44,18 +45,21 @@ public class CommandController {
         }
     }
 
-    private String[] parseCommand(String command) {
-        String operation, arg;
+    private Pair parseCommand(String c) {
+        String operation;
+        StringBuilder names;
+        Pair pair;
+        String command = c.trim();
         if (command.contains(" ")) {
-            operation = command.substring(0, command.lastIndexOf(" "));
-            arg = command.substring(command.indexOf(" ") + 1);
-            if (!arg.startsWith("/")) {
-                arg = system.pwd() + arg;
+            operation = command.substring(0, command.indexOf(" "));
+            names = new StringBuilder(command.substring(command.indexOf(" ") + 1).trim());
+            if (names.indexOf("/") != 0) {
+                names.insert(0, "/").insert(0, system.getPwd());
             }
+            pair = new Pair(operation, names.toString().substring(1));
         } else {
-            operation = command;
-            arg = "";
+            pair = new Pair(command, null);
         }
-        return new String[]{operation, arg};
+        return pair;
     }
 }

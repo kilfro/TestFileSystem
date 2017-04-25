@@ -22,4 +22,6 @@ public interface SystemInterface {
     List<TransferModel> ls();
 
     AbstractModel getRoot();
+
+    String getPwd();
 }
