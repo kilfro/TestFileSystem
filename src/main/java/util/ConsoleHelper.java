@@ -28,7 +28,7 @@ public class ConsoleHelper {
     }
 
     public void printHelp(String value) {
-        if ("".equals(value)) {
+        if (value == null) {
             printMessage("Список всех команд:\n\nhelp [name]\nexit\ncd dir\nls\nmkdir name\nmkfile name\n");
         } else {
             switch (value) {

@@ -53,8 +53,10 @@ public class CommandController {
         if (command.contains(" ")) {
             operation = command.substring(0, command.indexOf(" "));
             names = new StringBuilder(command.substring(command.indexOf(" ") + 1).trim());
-            if (names.indexOf("/") != 0) {
-                names.insert(0, "/").insert(0, system.getPwd());
+            if ("/".equals(names.toString())) {
+                names.insert(0, "/");
+            } else if (names.indexOf("/") != 0) {
+                names.insert(0, "/").insert(0, system.pwd());
             }
             pair = new Pair(operation, names.toString().substring(1));
         } else {

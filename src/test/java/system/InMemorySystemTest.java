@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * Created by kirill on 23.04.17.
  */
 public class InMemorySystemTest {
-    private SystemInterface system;
+    private InMemorySystem system;
 
     @Before
     public void initTestData() {
@@ -64,7 +64,7 @@ public class InMemorySystemTest {
 
     @Test
     public void cdNextDir() throws Exception {
-        assertTrue(system.cd("/dir1/dir10"));
+        assertTrue(system.cd("dir1/dir10"));
     }
 
     @Test(expected = NotFoundException.class)
@@ -79,13 +79,13 @@ public class InMemorySystemTest {
 
     @Test
     public void pwd() throws Exception {
-        system.cd("/dir1/dir10");
+        system.cd("dir1/dir10");
         assertTrue(system.pwd().equals("/dir1/dir10"));
     }
 
     @Test
     public void pwdBackToRoot() throws Exception {
-        system.cd("/dir1/dir10");
+        system.cd("dir1/dir10");
         system.cd("/");
         assertTrue(system.pwd().equals("/"));
     }

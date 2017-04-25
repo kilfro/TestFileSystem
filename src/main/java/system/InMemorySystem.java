@@ -13,20 +13,9 @@ import java.util.*;
  * Created by kirill on 22.04.17.
  */
 public class InMemorySystem implements SystemInterface {
-    private static final Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " ", "//", ","));
-    private final AbstractModel root = new Directory(null);
-    private AbstractModel currentModel = root;
+    private static final AbstractModel ROOT = new Directory(null);
+    private AbstractModel currentModel = ROOT;
     private StringBuilder pwd = new StringBuilder();
-
-    private void makeModel(String value, boolean isDirectory) throws AlreadyExistsException {
-        if (currentModel.getNext().containsKey(value)) {
-            throw new AlreadyExistsException("Файл или папка с таким именем уже существует!\n");
-        } else if (INCORRECT_NAMES.contains(value) || value == null) {
-            throw new IllegalArgumentException("Некорректное имя файла или папки!\n");
-        } else {
-            currentModel.getNext().put(value, isDirectory ? new Directory(currentModel) : new File(currentModel));
-        }
-    }
 
     @Override
     public boolean mkdir(String value) throws AlreadyExistsException {
@@ -34,7 +23,7 @@ public class InMemorySystem implements SystemInterface {
             throw new IllegalArgumentException("Некорректное имя файла!\n");
         }
         AbstractModel model = currentModel;
-        currentModel = root;
+        currentModel = ROOT;
         String[] values = value.split("/");
         for (int i = 0; i < values.length; i++) {
             String name = values[i];
@@ -57,7 +46,7 @@ public class InMemorySystem implements SystemInterface {
             throw new IllegalArgumentException("Некорректное имя файла!\n");
         }
         AbstractModel model = currentModel;
-        currentModel = root;
+        currentModel = ROOT;
         String[] values = value.split("/");
         for (int i = 0; i < values.length; i++) {
             String name = values[i];
@@ -81,12 +70,12 @@ public class InMemorySystem implements SystemInterface {
         if (value == null) {
             throw new NotFoundException("Путь не найден!\n");
         } else if ("/".equals(value)) {
-            currentModel = root;
+            currentModel = ROOT;
             pwd.delete(0, pwd.length());
         } else {
             AbstractModel bufModel = currentModel;
             StringBuilder bufPwd = pwd;
-            currentModel = root;
+            currentModel = ROOT;
             pwd.delete(0, pwd.length());
             for (String name : value.split("/")) {
                 currentModel = currentModel.getNext().get(name);
@@ -103,9 +92,6 @@ public class InMemorySystem implements SystemInterface {
 
     @Override
     public String pwd() {
-        if (currentModel.equals(root)) {
-            return "/";
-        }
         return pwd.toString();
     }
 
@@ -118,11 +104,17 @@ public class InMemorySystem implements SystemInterface {
         return toList;
     }
 
-    public AbstractModel getRoot() {
-        return root;
+    private void makeModel(String value, boolean isDirectory) throws AlreadyExistsException {
+        if (currentModel.getNext().containsKey(value)) {
+            throw new AlreadyExistsException("Файл или папка с таким именем уже существует!\n");
+        } else if (INCORRECT_NAMES.contains(value) || value == null) {
+            throw new IllegalArgumentException("Некорректное имя файла или папки!\n");
+        } else {
+            currentModel.getNext().put(value, isDirectory ? new Directory(currentModel) : new File(currentModel));
+        }
     }
 
-    public String getPwd() {
-        return pwd.toString();
+    AbstractModel getRoot() {
+        return ROOT;
     }
 }

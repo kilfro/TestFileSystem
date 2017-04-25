@@ -5,12 +5,17 @@ import exception.NotFoundException;
 import model.AbstractModel;
 import model.TransferModel;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by kirill on 22.04.17.
  */
 public interface SystemInterface {
+    Set<String> INCORRECT_NAMES = new HashSet<>(Arrays.asList("", ".", "..", "/", " ", "//", ","));
+
     boolean mkdir(String value) throws AlreadyExistsException;
 
     boolean mkfile(String value) throws AlreadyExistsException;
@@ -20,8 +25,4 @@ public interface SystemInterface {
     String pwd();
 
     List<TransferModel> ls();
-
-    AbstractModel getRoot();
-
-    String getPwd();
 }
