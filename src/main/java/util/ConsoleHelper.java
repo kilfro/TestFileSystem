@@ -40,9 +40,8 @@ public class ConsoleHelper {
                     printMessage(value + " - выход из программы.\n");
                     break;
                 case "cd":
-                    printMessage(value + " dir - переход к выбраной директории.\n");
+                    printMessage(value + " dir - переход к выбраной директории по абсолютному или отностительному пути.\n");
                     printMessage(value + " / - переход к корневой директории.\n");
-                    printMessage(value + " .. - переход к директории на уровень выше.\n");
                     break;
                 case "ls":
                     printMessage(value + " - содержимое директории.\n");

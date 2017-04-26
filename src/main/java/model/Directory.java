@@ -9,7 +9,7 @@ public class Directory extends AbstractModel {
 
     public Directory(AbstractModel previous) {
         super(previous, true);
-        setNext(new TreeMap<String, AbstractModel>());
+        setNext(new TreeMap<>());
         setSize(0);
     }
 }

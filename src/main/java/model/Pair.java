@@ -19,9 +19,4 @@ public class Pair {
     public String getNames() {
         return names;
     }
-
-    @Override
-    public String toString() {
-        return operation + ": " + names;
-    }
 }

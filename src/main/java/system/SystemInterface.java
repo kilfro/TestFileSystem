@@ -2,7 +2,6 @@ package system;
 
 import exception.AlreadyExistsException;
 import exception.NotFoundException;
-import model.AbstractModel;
 import model.TransferModel;
 
 import java.util.Arrays;
