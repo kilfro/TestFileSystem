@@ -50,11 +50,13 @@ public class CommandController {
         StringBuilder names;
         Pair pair;
         String command = c.trim();
+        //Если после trim() в строке все еще присутствуют проблы - команда передана с аргументом
         if (command.contains(" ")) {
             operation = command.substring(0, command.indexOf(" "));
             names = new StringBuilder(command.substring(command.indexOf(" ") + 1).trim());
             if ("/".equals(names.toString())) {
                 names.insert(0, "/");
+            //Если аргумент начинается с '/' - уже используется абсолютный путь
             } else if (names.indexOf("/") != 0) {
                 names.insert(0, "/").insert(0, system.pwd());
             }
