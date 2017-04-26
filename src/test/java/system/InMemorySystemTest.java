@@ -32,6 +32,16 @@ public class InMemorySystemTest {
         assertTrue(system.mkdir("dir3"));
     }
 
+    @Test
+    public void mkdirAbsolutePath() throws Exception {
+        assertTrue(system.mkdir("dir1/dir10/dir100"));
+    }
+
+    @Test
+    public void mkdirAbsolutePathCreateNewDir() throws Exception {
+        assertTrue(system.mkdir("dir1/dir20/dir100"));
+    }
+
     @Test(expected = AlreadyExistsException.class)
     public void mkdirExists() throws Exception {
         system.mkdir("dir1");
@@ -45,6 +55,16 @@ public class InMemorySystemTest {
     @Test
     public void mkfile() throws Exception {
         assertTrue(system.mkdir("file2"));
+    }
+
+    @Test
+    public void mkfileAbsolutePath() throws Exception {
+        assertTrue(system.mkdir("dir1/dir10/file1"));
+    }
+
+    @Test
+    public void mkfileAbsolutePathCreateNewDir() throws Exception {
+        assertTrue(system.mkdir("dir1/dir20/file1"));
     }
 
     @Test(expected = AlreadyExistsException.class)
@@ -80,14 +100,14 @@ public class InMemorySystemTest {
     @Test
     public void pwd() throws Exception {
         system.cd("dir1/dir10");
-        assertTrue(system.pwd().equals("/dir1/dir10"));
+        assertEquals(system.pwd(), "/dir1/dir10");
     }
 
     @Test
     public void pwdBackToRoot() throws Exception {
         system.cd("dir1/dir10");
         system.cd("/");
-        assertTrue(system.pwd().equals("/"));
+        assertEquals(system.pwd(), "");
     }
 
     @Test

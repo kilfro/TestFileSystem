@@ -45,7 +45,7 @@ public class CommandController {
         }
     }
 
-    private Pair parseCommand(String c) {
+    Pair parseCommand(String c) {
         String operation;
         StringBuilder names;
         Pair pair;

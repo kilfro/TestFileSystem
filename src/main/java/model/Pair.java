@@ -19,4 +19,22 @@ public class Pair {
     public String getNames() {
         return names;
     }
+
+    @Override
+    public int hashCode() {
+        return operation.length() * names.length();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Pair other = (Pair) obj;
+        return operation.equals(other.getOperation()) && names.equals(other.getNames());
+    }
 }
