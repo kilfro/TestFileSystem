@@ -23,11 +23,11 @@ public class MkFileCommandTest {
 
     @Test
     public void createNewFile() throws NotFoundException, AlreadyExistsException {
-        mkFile.execute("test", system);
+        mkFile.execute("new", system);
     }
 
     @Test(expected = AlreadyExistsException.class)
-    public void createDublicate() throws NotFoundException, AlreadyExistsException {
+    public void createDuplicate() throws NotFoundException, AlreadyExistsException {
         mkFile.execute("test", system);
         mkFile.execute("test", system);
     }

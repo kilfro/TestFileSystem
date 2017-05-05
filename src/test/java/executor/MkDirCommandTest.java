@@ -21,11 +21,11 @@ public class MkDirCommandTest {
 
     @Test
     public void createNewDirectory() throws Exception {
-        mkDir.execute("test", system);
+        mkDir.execute("folder", system);
     }
 
     @Test(expected = AlreadyExistsException.class)
-    public void createDublicate() throws Exception {
+    public void createDuplicate() throws Exception {
         mkDir.execute("test", system);
         mkDir.execute("test", system);
     }
