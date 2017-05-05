@@ -1,12 +1,9 @@
 package executor;
 
 import exception.NotFoundException;
-import model.Directory;
 import org.junit.After;
 import org.junit.Test;
 import system.InMemorySystem;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by kirill on 05.05.17.
