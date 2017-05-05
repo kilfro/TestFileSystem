@@ -55,7 +55,7 @@ public class CommandExecutor {
                 ConsoleHelper.printMessage("/: ");
                 Pair pair = parseCommand(ConsoleHelper.readString());
                 commandMap.get(pair.getOperation()).execute(pair.getNames(), system);
-            } catch (NotFoundException | AlreadyExistsException e) {
+            } catch (NotFoundException | AlreadyExistsException | IllegalArgumentException e) {
                 ConsoleHelper.printMessage(e.getMessage());
             } catch (InterruptOperationException e) {
                 ConsoleHelper.printMessage(e.getMessage());

@@ -1,8 +1,7 @@
 package executor;
 
 import system.InMemorySystem;
-
-import static util.ConsoleHelper.printMessage;
+import util.ConsoleHelper;
 
 /**
  * Created by kirill on 05.05.17.
@@ -10,6 +9,6 @@ import static util.ConsoleHelper.printMessage;
 class PwdCommand implements Command {
     @Override
     public void execute(String value, InMemorySystem system) {
-        printMessage(system.getPwd().toString());
+        ConsoleHelper.printMessage(system.getPwd().toString());
     }
 }
